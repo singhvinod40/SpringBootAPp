@@ -1,0 +1,74 @@
+resilience4j:
+  retry:
+  instances:
+    myRetry:
+      max-attempts: 3
+      wait-duration: 5s
+      enable-exponential-backoff: true
+      exponential-backoff-multiplier: 2
+      retry-exceptions:
+        - org.springframework.web.client.RestClientException
+      ignore-exceptions:
+        - com.amrut.prabhu.IgnoreException
+  circuitbreaker:
+    instances:
+      myCircuitBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+spring:
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+  datasource:
+    platform: org.hibernate.dialect.H2Dialect
+    url: jdbc:h2:file:./temp/db
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    show-sql: true
+    hibernate:
+     ddl-auto: update
+     generate-ddl: false
+  h2:
+    console.enabled: true
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui-custom.html
+
+server:
+  port: 8080
+
+storage:
+  storageAccount: DefaultEndpointsProtocol=https;AccountName=eyblobstorage;AccountKey=xa11fdyBPaLNvQ3ldlLTTTmCNcu3x08RhY6SR/8kbtkIo0CbQIABWJpVBwBgtfr4vJL4IrMtYF6Aalt4MmX/8g==;EndpointSuffix=core.windows.net
+  StorageEndPoint: https://eyblobstorage.blob.core.windows.net/
+
+
+
+
